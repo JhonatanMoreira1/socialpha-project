@@ -38,30 +38,30 @@
   }
 
   .dark {
-    --background: 0 0% 10%; /* Fundo mais escuro para melhor contraste */
-    --foreground: 0 0% 98%; /* Texto mais claro para melhor legibilidade */
-    --card: 0 0% 12%; /* Cards um pouco mais claros que o fundo */
+    --background: 210 10% 12%; /* Cinza escuro (fundo principal) */
+    --foreground: 0 0% 98%; /* Texto branco para contraste */
+    --card: 210 10% 15%; /* Cards um pouco mais claros que o fundo */
     --card-foreground: 0 0% 98%; /* Texto claro nos cards */
-    --popover: 0 0% 12%; /* Popovers com a mesma cor dos cards */
+    --popover: 210 10% 15%; /* Popovers com a mesma cor dos cards */
     --popover-foreground: 0 0% 98%; /* Texto claro nos popovers */
-    --primary: 230 80% 40%; /* Azul mais suave para o modo escuro */
+    --primary: 200 80% 50%; /* Azul vibrante (destaque principal) */
     --primary-foreground: 0 0% 98%; /* Texto claro sobre o primary */
-    --secondary: 340 70% 45%; /* Rosa mais suave para o modo escuro */
+    --secondary: 180 60% 50%; /* Ciano claro (destaque secundário) */
     --secondary-foreground: 0 0% 98%; /* Texto claro sobre o secondary */
-    --muted: 0 0% 15%; /* Cores mais suaves para elementos mutados */
+    --muted: 210 10% 20%; /* Cinza mais claro para elementos mutados */
     --muted-foreground: 0 0% 70%; /* Texto mutado mais claro */
-    --accent: 350 70% 50%; /* Destaque com um tom vibrante */
+    --accent: 190 70% 50%; /* Ciano suave para elementos de destaque */
     --accent-foreground: 0 0% 98%; /* Texto claro sobre o accent */
-    --destructive: 0 85% 58%; /* Vermelho vibrante para ações destrutivas */
+    --destructive: 0 0% 50%; /* Removi o vermelho, substituí por cinza */
     --destructive-foreground: 0 0% 98%; /* Texto claro sobre o destructive */
-    --border: 0 0% 20%; /* Bordas mais claras para melhor definição */
-    --input: 0 0% 25%; /* Inputs mais claros para melhor visibilidade */
-    --ring: 0 0% 80%; /* Anéis mais claros para foco */
-    --chart-1: 345 70% 60%; /* Cores dos gráficos ajustadas para o modo escuro */
-    --chart-2: 210 50% 60%;
-    --chart-3: 70 60% 50%;
-    --chart-4: 320 75% 50%;
-    --chart-5: 10 85% 60%;
+    --border: 210 10% 25%; /* Bordas mais claras para melhor definição */
+    --input: 210 10% 25%; /* Inputs mais claros para melhor visibilidade */
+    --ring: 200 80% 50%; /* Anéis com a cor primária para foco */
+    --chart-1: 200 80% 60%; /* Azul para gráficos */
+    --chart-2: 180 60% 50%; /* Ciano para gráficos */
+    --chart-3: 210 50% 50%; /* Azul mais suave para gráficos */
+    --chart-4: 190 70% 50%; /* Ciano suave para gráficos */
+    --chart-5: 200 70% 60%; /* Azul vibrante para gráficos */
   }
 }
 
