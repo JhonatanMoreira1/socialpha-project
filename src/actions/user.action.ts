@@ -3,14 +3,24 @@
 import prisma from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/router";
 
 export async function syncUser() {
   try {
     const { userId } = await auth();
     const user = await currentUser();
+    const router = useRouter();
 
     if (!userId || !user) return null;
-    if (user && !userId) revalidatePath("/");
+
+    if (user && !userId) {
+      // Atualiza o cache
+      revalidatePath("/");
+
+      // Recarrega a página
+      router.reload();
+    }
 
     const existingUser = await prisma.user.findUnique({
       where: {
