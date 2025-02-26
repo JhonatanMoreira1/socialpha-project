@@ -19,7 +19,7 @@ export async function syncUser() {
       revalidatePath("/");
 
       // Recarrega a página
-      router.reload();
+      return router.reload();
     }
 
     const existingUser = await prisma.user.findUnique({
