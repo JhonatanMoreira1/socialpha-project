@@ -5,14 +5,21 @@ import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { useEffect } from "react";
 
 export default async function Home() {
   const user = await currentUser();
+  if (!user) {
+    revalidatePath("/");
+  }
   const posts = await getPosts();
   const dbUserId = await getDbUserId();
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Atraso de 1 segundo
-  revalidatePath("/");
-  window.location.reload();
+  if (!dbUserId) {
+    revalidatePath("/");
+  }
+  useEffect(() => {
+    window.location.reload(); // Forçar recarga da página no cliente
+  }, []); // Executa apenas uma vez, quando o componente for montado
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
