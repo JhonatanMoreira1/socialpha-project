@@ -11,9 +11,8 @@ export default async function Home() {
   const dbUserId = await getDbUserId();
 
   // Se o usuário estiver logado mas não estiver sincronizado, sincronize-o
-  if (user && !dbUserId) {
-    await syncUser();
-  }
+
+  if ((user && !dbUserId) || user) await syncUser();
 
   // Obtenha os posts
   const posts = await getPosts();
