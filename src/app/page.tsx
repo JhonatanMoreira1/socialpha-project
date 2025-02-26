@@ -6,18 +6,27 @@ import { Button } from "@/components/ui/button";
 import WhoToFollow from "@/components/WhoToFollow";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
-import { Children } from "react";
 
 export default async function Home() {
-  const user = await currentUser();
-  const posts = await getPosts();
-  const dbUserId = await getDbUserId();
+  // Se precisar de um atraso (não recomendado, a menos que seja necessário)
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  // Executando as funções em paralelo para melhorar o desempenho
+  const [user, posts, dbUserId] = await Promise.all([
+    currentUser(),
+    getPosts(),
+    getDbUserId(),
+  ]);
+
+  // Revalida o cache apenas se necessário após obter os dados
+  revalidatePath("/");
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
       <div className="lg:col-span-6">
-        {user ? <CreatePost /> : null}
+        {user && <CreatePost />}
         <div className="space-y-6">
           {posts.map((post) => (
             <PostCard key={post.id} post={post} dbUserId={dbUserId} />
