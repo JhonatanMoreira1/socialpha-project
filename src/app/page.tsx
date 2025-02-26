@@ -13,7 +13,7 @@ export default async function Home() {
 
   // Verifique se o usuário está autenticado
   if (!user) {
-    return redirect("/"); // Redireciona para a página de login
+    return; // Redireciona para a página de login
   }
 
   // Verifique se o usuário já está sincronizado
