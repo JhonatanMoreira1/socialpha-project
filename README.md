@@ -1,6 +1,6 @@
 # Socialpha
 
-**Video Demo**: [<URL HERE>](<URL HERE>)
+**Video Demo**: <https://youtu.be/pOljmMz9SSg>
 
 ## Description
 Socialpha is a full-stack social media application built with modern web technologies. It allows users to create posts, like and comment on them, upload images, and receive real-time notifications. The app is designed to provide a seamless and engaging user experience, leveraging the power of Next.js, Postgres, Prisma, and Clerk for authentication.
