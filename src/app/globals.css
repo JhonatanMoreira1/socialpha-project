@@ -40,28 +40,28 @@
   .dark {
     --background: 210 10% 12%; /* Cinza escuro (fundo principal) */
     --foreground: 0 0% 98%; /* Texto branco para contraste */
-    --card: 210 10% 15%; /* Cards um pouco mais claros que o fundo */
+    --card: 210 15% 18%; /* Cards com tonalidade um pouco mais clara */
     --card-foreground: 0 0% 98%; /* Texto claro nos cards */
-    --popover: 210 10% 15%; /* Popovers com a mesma cor dos cards */
+    --popover: 210 15% 18%; /* Popovers com a mesma cor dos cards */
     --popover-foreground: 0 0% 98%; /* Texto claro nos popovers */
-    --primary: 200 80% 50%; /* Azul vibrante (destaque principal) */
+    --primary: 220 80% 55%; /* Azul suave para destaque principal */
     --primary-foreground: 0 0% 98%; /* Texto claro sobre o primary */
-    --secondary: 180 60% 50%; /* Ciano claro (destaque secundário) */
+    --secondary: 180 45% 60%; /* Ciano suave para destaque secundário */
     --secondary-foreground: 0 0% 98%; /* Texto claro sobre o secondary */
     --muted: 210 10% 20%; /* Cinza mais claro para elementos mutados */
-    --muted-foreground: 0 0% 70%; /* Texto mutado mais claro */
+    --muted-foreground: 0 0% 75%; /* Texto mutado mais suave */
     --accent: 190 70% 50%; /* Ciano suave para elementos de destaque */
     --accent-foreground: 0 0% 98%; /* Texto claro sobre o accent */
-    --destructive: 0 0% 50%; /* Removi o vermelho, substituí por cinza */
+    --destructive: 0 0% 55%; /* Vermelho moderado para ações destrutivas */
     --destructive-foreground: 0 0% 98%; /* Texto claro sobre o destructive */
     --border: 210 10% 25%; /* Bordas mais claras para melhor definição */
-    --input: 210 10% 25%; /* Inputs mais claros para melhor visibilidade */
-    --ring: 200 80% 50%; /* Anéis com a cor primária para foco */
-    --chart-1: 200 80% 60%; /* Azul para gráficos */
-    --chart-2: 180 60% 50%; /* Ciano para gráficos */
-    --chart-3: 210 50% 50%; /* Azul mais suave para gráficos */
-    --chart-4: 190 70% 50%; /* Ciano suave para gráficos */
-    --chart-5: 200 70% 60%; /* Azul vibrante para gráficos */
+    --input: 210 10% 30%; /* Inputs mais claros para boa visibilidade */
+    --ring: 220 80% 60%; /* Anéis com um azul mais suave para foco */
+    --chart-1: 220 75% 60%; /* Azul mais suave para gráficos */
+    --chart-2: 180 50% 60%; /* Ciano moderado para gráficos */
+    --chart-3: 210 40% 60%; /* Azul suave para gráficos */
+    --chart-4: 190 60% 55%; /* Ciano suave para gráficos */
+    --chart-5: 220 60% 65%; /* Azul vibrante para gráficos */
   }
 }
 
