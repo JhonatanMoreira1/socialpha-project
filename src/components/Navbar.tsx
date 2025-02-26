@@ -1,6 +1,5 @@
 import Link from "next/link";
-import React from "react";
-import DestopNavbar from "./DestopNavbar";
+import DesktopNavbar from "./DestopNavbar";
 import MobileNavbar from "./MobileNavbar";
 import { currentUser } from "@clerk/nextjs/server";
 import { syncUser } from "@/actions/user.action";
@@ -21,12 +20,12 @@ async function Navbar() {
               Socially
             </Link>
           </div>
-          <DestopNavbar />
+
+          <DesktopNavbar />
           <MobileNavbar />
         </div>
       </div>
     </nav>
   );
 }
-
 export default Navbar;

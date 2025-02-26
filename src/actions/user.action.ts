@@ -9,7 +9,7 @@ export async function syncUser() {
     const { userId } = await auth();
     const user = await currentUser();
 
-    if (!userId || !user) return null;
+    if (!userId || !user) return;
 
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -33,7 +33,6 @@ export async function syncUser() {
     return dbUser;
   } catch (error) {
     console.log("Error in syncUser", error);
-    return null;
   }
 }
 
@@ -60,7 +59,10 @@ export async function getDbUserId() {
 
   const user = await getUserByClerkId(clerkId);
 
-  if (!user) return null;
+  if (!user) {
+    revalidatePath("/");
+    return null;
+  }
 
   return user.id;
 }
