@@ -14,12 +14,6 @@ export default async function Home() {
   }
   const posts = await getPosts();
   const dbUserId = await getDbUserId();
-  if (!dbUserId) {
-    revalidatePath("/");
-  }
-  useEffect(() => {
-    window.location.reload(); // Forçar recarga da página no cliente
-  }, []); // Executa apenas uma vez, quando o componente for montado
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
