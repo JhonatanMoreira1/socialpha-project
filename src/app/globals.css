@@ -38,26 +38,26 @@
   }
 
   .dark {
-    --background: 0 0% 10%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 230 80% 40%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 340 70% 45%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 70%;
-    --accent: 350 70% 50%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 85% 58%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%;
-    --input: 0 0% 25%;
-    --ring: 0 0% 80%;
-    --chart-1: 345 70% 60%;
+    --background: 0 0% 10%; /* Fundo mais escuro para melhor contraste */
+    --foreground: 0 0% 98%; /* Texto mais claro para melhor legibilidade */
+    --card: 0 0% 12%; /* Cards um pouco mais claros que o fundo */
+    --card-foreground: 0 0% 98%; /* Texto claro nos cards */
+    --popover: 0 0% 12%; /* Popovers com a mesma cor dos cards */
+    --popover-foreground: 0 0% 98%; /* Texto claro nos popovers */
+    --primary: 230 80% 40%; /* Azul mais suave para o modo escuro */
+    --primary-foreground: 0 0% 98%; /* Texto claro sobre o primary */
+    --secondary: 340 70% 45%; /* Rosa mais suave para o modo escuro */
+    --secondary-foreground: 0 0% 98%; /* Texto claro sobre o secondary */
+    --muted: 0 0% 15%; /* Cores mais suaves para elementos mutados */
+    --muted-foreground: 0 0% 70%; /* Texto mutado mais claro */
+    --accent: 350 70% 50%; /* Destaque com um tom vibrante */
+    --accent-foreground: 0 0% 98%; /* Texto claro sobre o accent */
+    --destructive: 0 85% 58%; /* Vermelho vibrante para ações destrutivas */
+    --destructive-foreground: 0 0% 98%; /* Texto claro sobre o destructive */
+    --border: 0 0% 20%; /* Bordas mais claras para melhor definição */
+    --input: 0 0% 25%; /* Inputs mais claros para melhor visibilidade */
+    --ring: 0 0% 80%; /* Anéis mais claros para foco */
+    --chart-1: 345 70% 60%; /* Cores dos gráficos ajustadas para o modo escuro */
     --chart-2: 210 50% 60%;
     --chart-3: 70 60% 50%;
     --chart-4: 320 75% 50%;
@@ -67,10 +67,10 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50; /* Bordas e outlines consistentes */
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground; /* Aplica o fundo e texto padrão */
   }
 }
