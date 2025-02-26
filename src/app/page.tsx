@@ -5,6 +5,7 @@ import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export default async function Home() {
   const user = await currentUser();
@@ -12,7 +13,8 @@ export default async function Home() {
 
   // Se o usuário estiver logado mas não estiver sincronizado, sincronize-o
 
-  if ((user && !dbUserId) || user) await syncUser();
+  if (user && !dbUserId) await syncUser();
+  revalidatePath("/");
 
   // Obtenha os posts
   const posts = await getPosts();

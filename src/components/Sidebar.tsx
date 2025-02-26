@@ -15,7 +15,10 @@ async function Sidebar() {
   if (!authUser) return <UnAuthenticatedSidebar />;
 
   const user = await getUserByClerkId(authUser.id);
-  if (!user) return null;
+  if (!user) {
+    revalidatePath("/");
+    return;
+  }
 
   return (
     <div className="sticky top-20">
