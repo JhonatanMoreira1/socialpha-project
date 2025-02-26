@@ -5,8 +5,6 @@ import {
   HomeIcon,
   LogOutIcon,
   MenuIcon,
-  MoonIcon,
-  SunIcon,
   UserIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,18 +16,29 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useState } from "react";
-import { useAuth, SignInButton, SignOutButton } from "@clerk/nextjs";
-import { useTheme } from "next-themes";
+import { useAuth, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+// import { useTheme } from "next-themes"
 import Link from "next/link";
+import { ModeToggle } from "@/components/ModeToggle";
 
 function MobileNavbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  // we use isSignedIn = nuseAuth() and not currentUser() because currentUser() is a server side function and we are on the client side
   const { isSignedIn } = useAuth();
-  const { theme, setTheme } = useTheme();
+  // const { theme, setTheme } = useTheme()
+  const { user } = useUser();
+
+  //to get the dynamic route
+  const getProfilePath = () => {
+    if (!user) return "/profile";
+    return `/profile/${
+      user.username ?? user.emailAddresses[0].emailAddress.split("@")[0]
+    }`;
+  };
 
   return (
     <div className="flex md:hidden items-center space-x-2">
-      <Button
+      {/* <Button
         variant="ghost"
         size="icon"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -38,8 +47,8 @@ function MobileNavbar() {
         <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
         <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         <span className="sr-only">Toggle theme</span>
-      </Button>
-
+      </Button> */}
+      <ModeToggle />
       <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon">
@@ -79,7 +88,7 @@ function MobileNavbar() {
                   className="flex items-center gap-3 justify-start"
                   asChild
                 >
-                  <Link href="/profile">
+                  <Link href={getProfilePath()}>
                     <UserIcon className="w-4 h-4" />
                     Profile
                   </Link>
@@ -95,7 +104,7 @@ function MobileNavbar() {
                 </SignOutButton>
               </>
             ) : (
-              <SignInButton mode="modal">
+              <SignInButton mode="redirect">
                 <Button variant="default" className="w-full">
                   Sign In
                 </Button>

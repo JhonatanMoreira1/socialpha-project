@@ -9,7 +9,8 @@ export async function syncUser() {
     const { userId } = await auth();
     const user = await currentUser();
 
-    if (!userId || !user) return;
+    if (!userId || !user) return null;
+    if (user && !userId) revalidatePath("/");
 
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -32,6 +33,7 @@ export async function syncUser() {
 
     return dbUser;
   } catch (error) {
+    revalidatePath("/");
     console.log("Error in syncUser", error);
   }
 }
