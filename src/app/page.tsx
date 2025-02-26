@@ -1,21 +1,37 @@
+// app/page.tsx
 import { getPosts } from "@/actions/post.action";
-import { getDbUserId } from "@/actions/user.action";
+import { getDbUserId, syncUser } from "@/actions/user.action";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export default async function Home() {
   const user = await currentUser();
-  const posts = await getPosts();
   const dbUserId = await getDbUserId();
+
+  try {
+    // Se o usuário estiver logado mas não estiver sincronizado, sincronize-o
+    if (user && !dbUserId) {
+      await syncUser();
+    }
+  } catch (error) {
+    revalidatePath("/");
+    // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
+  }
+
+  // Obtenha os posts
+  const posts = await getPosts();
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
       <div className="lg:col-span-6">
-        {user ? <CreatePost /> : null}
+        {/* Exibe o CreatePost apenas se o usuário estiver logado */}
+        {user && dbUserId ? <CreatePost /> : null}
 
         <div className="space-y-6">
+          {/* Exibe os posts, independentemente de haver um usuário logado */}
           {posts.map((post) => (
             <PostCard key={post.id} post={post} dbUserId={dbUserId} />
           ))}
@@ -23,7 +39,8 @@ export default async function Home() {
       </div>
 
       <div className="hidden lg:block lg:col-span-4 sticky top-20">
-        <WhoToFollow />
+        {/* Exibe o WhoToFollow apenas se o usuário estiver logado */}
+        {user && dbUserId ? <WhoToFollow /> : null}
       </div>
     </div>
   );
