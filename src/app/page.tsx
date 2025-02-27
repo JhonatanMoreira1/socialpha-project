@@ -6,6 +6,7 @@ import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const user = await currentUser();
@@ -17,9 +18,13 @@ export default async function Home() {
       await syncUser();
     }
   } catch (error) {
+    console.error("Error syncing user:", error);
+
+    // Revalide o cache da página inicial
     revalidatePath("/");
-    return Home();
-    // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
+
+    // Redirecione o usuário para a página inicial para forçar uma recarga
+    redirect("/");
   }
 
   // Obtenha os posts
