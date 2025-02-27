@@ -13,7 +13,7 @@ export async function syncUser() {
     const user = await currentUser();
 
     // Se não houver userId ou user, retorne null
-    if (!userId || !user) return revalidatePath("/");
+    if (!userId || !user) return null;
 
     // Verifique se o usuário já existe no banco de dados
     const existingUser = await prisma.user.findUnique({

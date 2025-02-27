@@ -17,9 +17,11 @@ export default async function Home() {
     if (user && !dbUserId) {
       await syncUser();
     }
+    if (!user) {
+      await syncUser();
+    }
   } catch (error) {
     console.error("Error in syncUser2:", error);
-    return Home();
 
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   } finally {
