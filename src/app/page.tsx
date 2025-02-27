@@ -17,6 +17,7 @@ export default async function Home() {
       await syncUser();
     }
   } catch (error) {
+    revalidatePath("/");
     return Home();
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   }
