@@ -16,8 +16,7 @@ export default async function Home() {
     try {
       await syncUser();
     } catch (error) {
-      revalidatePath("/");
-      console.log(error);
+      return Home();
     }
   }
 
