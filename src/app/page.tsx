@@ -11,13 +11,14 @@ export default async function Home() {
   const user = await currentUser();
   const dbUserId = await getDbUserId();
 
-  // Se o usuário estiver logado mas não estiver sincronizado, sincronize-o
-  if (user && !dbUserId) {
-    try {
+  try {
+    // Se o usuário estiver logado mas não estiver sincronizado, sincronize-o
+    if (user && !dbUserId) {
       await syncUser();
-    } catch (error) {
-      return Home();
     }
+  } catch (error) {
+    return Home();
+    // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   }
 
   // Obtenha os posts
