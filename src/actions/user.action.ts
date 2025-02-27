@@ -1,5 +1,6 @@
 "use server";
 
+import Home from "@/app/page";
 import prisma from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -13,7 +14,7 @@ export async function syncUser() {
     const user = await currentUser();
 
     // Se não houver userId ou user, retorne null
-    if (!userId || !user) return null;
+    if (!userId || !user) return Home();
 
     // Verifique se o usuário já existe no banco de dados
     const existingUser = await prisma.user.findUnique({
