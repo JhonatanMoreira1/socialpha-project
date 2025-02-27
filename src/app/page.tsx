@@ -23,6 +23,7 @@ export default async function Home() {
 
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   } finally {
+    revalidatePath("/");
     const posts = await getPosts();
 
     return (
