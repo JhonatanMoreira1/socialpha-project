@@ -2,25 +2,11 @@ import Link from "next/link";
 import DesktopNavbar from "./DestopNavbar";
 import MobileNavbar from "./MobileNavbar";
 import { currentUser } from "@clerk/nextjs/server";
-import { getDbUserId, syncUser } from "@/actions/user.action";
-import { revalidatePath } from "next/cache";
+import { syncUser } from "@/actions/user.action";
 
 async function Navbar() {
   const user = await currentUser();
-  const dbUserId = await getDbUserId();
-  try {
-    // Se o usuário estiver logado mas não estiver sincronizado, sincronize-o
-    if (user && !dbUserId) {
-      await syncUser();
-    }
-  } catch (error) {
-    console.error("Error syncing user:", error);
-
-    // Revalide o cache da página inicial
-    revalidatePath("/");
-
-    // Redirecione o usuário para a página inicial para forçar uma recarga
-  }
+  if (user) await syncUser(); // POST
 
   return (
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">

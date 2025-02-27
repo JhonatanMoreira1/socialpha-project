@@ -2,7 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
-import { getUserByClerkId, syncUser } from "@/actions/user.action";
+import { getUserByClerkId } from "@/actions/user.action";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
@@ -13,10 +13,7 @@ async function Sidebar() {
   if (!authUser) return <UnAuthenticatedSidebar />;
 
   const user = await getUserByClerkId(authUser.id);
-  await syncUser();
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <div className="sticky top-20">

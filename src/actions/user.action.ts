@@ -1,6 +1,5 @@
 "use server";
 
-import Home from "@/app/page";
 import prisma from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
