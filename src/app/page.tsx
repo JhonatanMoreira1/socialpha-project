@@ -19,33 +19,32 @@ export default async function Home() {
     }
   } catch (error) {
     console.error("Error in syncUser2:", error);
-    throw new Error("Problema interno, recarrege a página");
+    revalidatePath("/");
+    return Home();
 
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   } finally {
     const posts = await getPosts();
-
+    revalidatePath("/");
     return (
-      (
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
-          <div className="lg:col-span-6">
-            {/* Exibe o CreatePost apenas se o usuário estiver logado */}
-            {user && dbUserId ? <CreatePost /> : null}
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+        <div className="lg:col-span-6">
+          {/* Exibe o CreatePost apenas se o usuário estiver logado */}
+          {user && dbUserId ? <CreatePost /> : null}
 
-            <div className="space-y-6">
-              {/* Exibe os posts, independentemente de haver um usuário logado */}
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} dbUserId={dbUserId} />
-              ))}
-            </div>
-          </div>
-
-          <div className="hidden lg:block lg:col-span-4 sticky top-20">
-            {/* Exibe o WhoToFollow apenas se o usuário estiver logado */}
-            {user && dbUserId ? <WhoToFollow /> : null}
+          <div className="space-y-6">
+            {/* Exibe os posts, independentemente de haver um usuário logado */}
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} dbUserId={dbUserId} />
+            ))}
           </div>
         </div>
-      ) && revalidatePath("/")
+
+        <div className="hidden lg:block lg:col-span-4 sticky top-20">
+          {/* Exibe o WhoToFollow apenas se o usuário estiver logado */}
+          {user && dbUserId ? <WhoToFollow /> : null}
+        </div>
+      </div>
     );
   }
 }
