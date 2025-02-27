@@ -17,7 +17,7 @@ export default async function Home() {
       await syncUser();
     }
   } catch (error) {
-    revalidatePath("/");
+    throw new Error("Recarrege a página");
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   }
 
