@@ -17,16 +17,12 @@ export default async function Home() {
     if (user && !dbUserId) {
       await syncUser();
     }
-    if (!user) {
-      revalidatePath("/");
-    }
   } catch (error) {
     console.error("Error in syncUser2:", error);
 
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   } finally {
     const posts = await getPosts();
-    revalidatePath("/");
     revalidatePath("/");
     return (
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
