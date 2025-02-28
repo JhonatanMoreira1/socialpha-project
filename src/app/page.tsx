@@ -18,7 +18,7 @@ export default async function Home() {
       await syncUser();
     }
     if (!user) {
-      await syncUser();
+      revalidatePath("/");
     }
   } catch (error) {
     console.error("Error in syncUser2:", error);
