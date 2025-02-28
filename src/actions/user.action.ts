@@ -43,7 +43,7 @@ export async function syncUser() {
     return dbUser;
   } catch (error) {
     console.error("Error in syncUser:", error);
-    return revalidatePath("/");
+    throw new Error("error in sync user");
   }
 }
 
