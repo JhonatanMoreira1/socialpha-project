@@ -23,7 +23,6 @@ export default async function Home() {
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   } finally {
     const posts = await getPosts();
-    revalidatePath("/");
     return (
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
         <div className="lg:col-span-6">
