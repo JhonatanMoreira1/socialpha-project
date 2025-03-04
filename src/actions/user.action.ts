@@ -44,8 +44,6 @@ export async function syncUser() {
   } catch (error) {
     console.error("Error in syncUser:", error);
     throw new Error("error in sync user");
-  } finally {
-    revalidatePath("/");
   }
 }
 
