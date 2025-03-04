@@ -50,7 +50,9 @@ export default function RootLayout({
                     <div className="hidden lg:block lg:col-span-3">
                       <Sidebar />
                     </div>
-                    <div className="lg:col-span-9">{children}</div>
+                    <div className="col-span-1 md:col-span-12 lg:col-span-9">
+                      {children}
+                    </div>
                   </div>
                 </div>
               </main>
