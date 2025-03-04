@@ -12,7 +12,7 @@ export default async function Home() {
   const user = await currentUser();
   const dbUserId = await getDbUserId();
   const posts = await getPosts();
-  
+
   // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
@@ -21,7 +21,7 @@ export default async function Home() {
         {user && dbUserId ? <CreatePost /> : null}
 
         <div className="space-y-6">
-          {/* Exibe os posts, independentemente de haver um usuário logado */}
+          {/* Exibe os posts independentemente de haver um usuário logado */}
           {posts.map((post) => (
             <PostCard key={post.id} post={post} dbUserId={dbUserId} />
           ))}
