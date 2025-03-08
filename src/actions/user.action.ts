@@ -7,7 +7,13 @@ import { redirect } from "next/navigation";
 
 // Sincroniza o usuário com o banco de dados
 
-async function findUserWithRetry(clerkId: string, retries = 3, delay = 500) {
+import { User } from "@prisma/client"; // Importe o tipo User do Prisma Client
+
+async function findUserWithRetry(
+  clerkId: string,
+  retries = 3,
+  delay = 500
+): Promise<User | null> {
   for (let i = 0; i < retries; i++) {
     const user = await prisma.user.findUnique({
       where: { clerkId },
@@ -45,11 +51,6 @@ export async function syncUser() {
     });
 
     // Revalide o cache da página inicial
-    await prisma.user.findUnique({
-      where: {
-        clerkId: userId,
-      },
-    });
     revalidatePath("/");
 
     return dbUser;
