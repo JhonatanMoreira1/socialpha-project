@@ -4,25 +4,10 @@ import prisma from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getProfileByUsername } from "./profile.action";
+import { Prisma } from "@prisma/client";
 
 // Sincroniza o usuário com o banco de dados
-
-import { User } from "@prisma/client"; // Importe o tipo User do Prisma Client
-
-async function findUserWithRetry(
-  clerkId: string,
-  retries = 3,
-  delay = 500
-): Promise<User | null> {
-  for (let i = 0; i < retries; i++) {
-    const user = await prisma.user.findUnique({
-      where: { clerkId },
-    });
-    if (user) return user;
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-  return null;
-}
 
 // actions/user.action.ts
 export async function syncUser() {
@@ -30,15 +15,19 @@ export async function syncUser() {
     const { userId } = await auth();
     const user = await currentUser();
 
-    // Se não houver userId ou user, retorne null
     if (!userId || !user) return null;
 
-    const existingUser = await findUserWithRetry(userId);
+    // Adiciona um pequeno atraso para garantir que o usuário esteja disponível no banco de dados
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Se o usuário já existir, retorne-o
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+    });
+
     if (existingUser) return existingUser;
 
-    // Crie o usuário no banco de dados
     const dbUser = await prisma.user.create({
       data: {
         clerkId: userId,
@@ -50,7 +39,6 @@ export async function syncUser() {
       },
     });
 
-    // Revalide o cache da página inicial
     await prisma.user.findUnique({
       where: {
         clerkId: userId,
