@@ -51,6 +51,11 @@ export async function syncUser() {
     });
 
     // Revalide o cache da página inicial
+    await prisma.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+    });
     revalidatePath("/");
 
     return dbUser;
