@@ -6,6 +6,18 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 // Sincroniza o usuário com o banco de dados
+
+async function findUserWithRetry(clerkId: string, retries = 3, delay = 500) {
+  for (let i = 0; i < retries; i++) {
+    const user = await prisma.user.findUnique({
+      where: { clerkId },
+    });
+    if (user) return user;
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+  return null;
+}
+
 // actions/user.action.ts
 export async function syncUser() {
   try {
@@ -15,12 +27,7 @@ export async function syncUser() {
     // Se não houver userId ou user, retorne null
     if (!userId || !user) return null;
 
-    // Verifique se o usuário já existe no banco de dados
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        clerkId: userId,
-      },
-    });
+    const existingUser = await findUserWithRetry(userId);
 
     // Se o usuário já existir, retorne-o
     if (existingUser) return existingUser;
@@ -38,6 +45,11 @@ export async function syncUser() {
     });
 
     // Revalide o cache da página inicial
+    await prisma.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+    });
     revalidatePath("/");
 
     return dbUser;
