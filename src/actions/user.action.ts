@@ -9,16 +9,31 @@ import { Prisma } from "@prisma/client";
 
 // Sincroniza o usuário com o banco de dados
 
+async function findUserInClerkWithRetry(
+  userId: string,
+  retries = 3,
+  delay = 500
+): Promise<any> {
+  for (let i = 0; i < retries; i++) {
+    const user = await currentUser();
+    if (user && user.id === userId) return user; // Retorna o usuário se encontrado
+    await new Promise((resolve) => setTimeout(resolve, delay)); // Aguarda antes de tentar novamente
+  }
+  return null; // Retorna null se o usuário não for encontrado após as retentativas
+}
+
 // actions/user.action.ts
 export async function syncUser() {
   try {
     const { userId } = await auth();
-    const user = await currentUser();
 
-    if (!userId || !user) return null;
+    if (!userId) return null;
+
+    const clerkUser = await findUserInClerkWithRetry(userId);
+
+    if (!clerkUser) return null;
 
     // Adiciona um pequeno atraso para garantir que o usuário esteja disponível no banco de dados
-    await new Promise((resolve) => setTimeout(resolve, 500));
 
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -31,20 +46,16 @@ export async function syncUser() {
     const dbUser = await prisma.user.create({
       data: {
         clerkId: userId,
-        name: `${user.firstName || ""} ${user.lastName || ""}`,
+        name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`,
         username:
-          user.username ?? user.emailAddresses[0].emailAddress.split("@")[0],
-        email: user.emailAddresses[0].emailAddress,
-        image: user.imageUrl,
+          clerkUser.username ??
+          clerkUser.emailAddresses[0].emailAddress.split("@")[0],
+        email: clerkUser.emailAddresses[0].emailAddress,
+        image: clerkUser.imageUrl,
       },
     });
 
-    await prisma.user.findUnique({
-      where: {
-        clerkId: userId,
-      },
-    });
-    revalidatePath("/");
+    revalidatePath("/"); //proximoa opção: set timeout
 
     return dbUser;
   } catch (error) {
@@ -55,7 +66,7 @@ export async function syncUser() {
 
 // Obtém o usuário pelo clerkId
 export async function getUserByClerkId(clerkId: string) {
-  return prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       clerkId,
     },
@@ -69,6 +80,7 @@ export async function getUserByClerkId(clerkId: string) {
       },
     },
   });
+  return user;
 }
 
 // Obtém o ID do usuário no banco de dados
