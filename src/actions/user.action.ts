@@ -9,29 +9,15 @@ import { Prisma } from "@prisma/client";
 
 // Sincroniza o usuário com o banco de dados
 
-async function findUserInClerkWithRetry(
-  userId: string,
-  retries = 3,
-  delay = 500
-): Promise<any> {
-  for (let i = 0; i < retries; i++) {
-    const user = await currentUser();
-    if (user && user.id === userId) return user; // Retorna o usuário se encontrado
-    await new Promise((resolve) => setTimeout(resolve, delay)); // Aguarda antes de tentar novamente
-  }
-  return null; // Retorna null se o usuário não for encontrado após as retentativas
-}
-
 // actions/user.action.ts
 export async function syncUser() {
   try {
     const { userId } = await auth();
 
-    if (!userId) return null;
+    const user = await currentUser();
 
-    const clerkUser = await findUserInClerkWithRetry(userId);
-
-    if (!clerkUser) return null;
+    if (!user) return null;
+    if (!userId) return syncUser();
 
     // Adiciona um pequeno atraso para garantir que o usuário esteja disponível no banco de dados
 
@@ -46,16 +32,15 @@ export async function syncUser() {
     const dbUser = await prisma.user.create({
       data: {
         clerkId: userId,
-        name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`,
+        name: `${user.firstName || ""} ${user.lastName || ""}`,
         username:
-          clerkUser.username ??
-          clerkUser.emailAddresses[0].emailAddress.split("@")[0],
-        email: clerkUser.emailAddresses[0].emailAddress,
-        image: clerkUser.imageUrl,
+          user.username ?? user.emailAddresses[0].emailAddress.split("@")[0],
+        email: user.emailAddresses[0].emailAddress,
+        image: user.imageUrl,
       },
     });
 
-    revalidatePath("/"); //proximoa opção: set timeout
+    revalidatePath("/"); //proximoa opção: set timeout (não commitado)
 
     return dbUser;
   } catch (error) {
@@ -66,7 +51,7 @@ export async function syncUser() {
 
 // Obtém o usuário pelo clerkId
 export async function getUserByClerkId(clerkId: string) {
-  const user = await prisma.user.findUnique({
+  return await prisma.user.findUnique({
     where: {
       clerkId,
     },
@@ -80,7 +65,6 @@ export async function getUserByClerkId(clerkId: string) {
       },
     },
   });
-  return user;
 }
 
 // Obtém o ID do usuário no banco de dados
