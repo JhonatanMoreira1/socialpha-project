@@ -13,6 +13,7 @@ export default async function Home() {
     const user = await currentUser();
     const dbUserId = await getDbUserId();
     const posts = await getPosts();
+    await syncUser();
 
     // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
     return (
