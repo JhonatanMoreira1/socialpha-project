@@ -37,6 +37,6 @@ export default async function Home() {
     );
   } catch (error) {
     revalidatePath("/");
-    return await Home();
+    return Home();
   }
 }

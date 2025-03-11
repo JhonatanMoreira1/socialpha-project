@@ -15,7 +15,7 @@ export async function syncUser() {
     const user = await currentUser();
 
     if (!user) return null;
-    if (!userId) return syncUser();
+    if (!userId) return await syncUser();
 
     // Adiciona um pequeno atraso para garantir que o usuário esteja disponível no banco de dados
 
