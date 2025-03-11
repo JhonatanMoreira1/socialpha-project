@@ -3,9 +3,6 @@
 import prisma from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { getProfileByUsername } from "./profile.action";
-import { Prisma } from "@prisma/client";
 import Home from "@/app/page";
 
 // Sincroniza o usuário com o banco de dados
