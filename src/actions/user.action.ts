@@ -46,8 +46,8 @@ export async function syncUser() {
     return dbUser;
   } catch (error) {
     console.error("Error in syncUser:", error);
-    revalidatePath("/");
-    return null;
+    Home();
+    return revalidatePath("/");
   }
 }
 
