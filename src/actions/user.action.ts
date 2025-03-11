@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getProfileByUsername } from "./profile.action";
 import { Prisma } from "@prisma/client";
+import Home from "@/app/page";
 
 // Sincroniza o usuário com o banco de dados
 
@@ -48,7 +49,7 @@ export async function syncUser() {
     return dbUser;
   } catch (error) {
     console.error("Error in syncUser:", error);
-    throw new Error("error in sync user");
+    Home();
   }
 }
 
