@@ -44,7 +44,7 @@ export async function syncUser() {
       },
     });
 
-    revalidatePath("/"); //proximoa opção: set timeout (não commitado)
+    revalidatePath("/");
 
     return dbUser;
   } catch (error) {
