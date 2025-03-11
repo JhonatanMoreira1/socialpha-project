@@ -36,7 +36,8 @@ export default async function Home() {
       </div>
     );
   } catch (error) {
-    revalidatePath("/");
     return Home();
+  } finally {
+    revalidatePath("/");
   }
 }
