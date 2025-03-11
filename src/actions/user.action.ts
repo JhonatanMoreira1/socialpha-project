@@ -27,7 +27,10 @@ export async function syncUser() {
       },
     });
 
-    if (existingUser) return existingUser;
+    if (existingUser) {
+      revalidatePath("/");
+      return existingUser;
+    }
 
     const dbUser = await prisma.user.create({
       data: {
