@@ -46,7 +46,7 @@ export async function syncUser() {
     return dbUser;
   } catch (error) {
     console.error("Error in syncUser:", error);
-    throw new Error("error in sync user");
+    return await Home();
   }
 }
 
