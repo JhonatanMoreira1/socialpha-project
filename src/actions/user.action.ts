@@ -47,7 +47,7 @@ export async function syncUser() {
   } catch (error) {
     console.error("Error in syncUser:", error);
     revalidatePath("/");
-    return Home();
+    return null;
   }
 }
 
