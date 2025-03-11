@@ -8,25 +8,25 @@ import Home from "@/app/page";
 // Sincroniza o usuário com o banco de dados
 
 // actions/user.action.ts
-export async function syncUser() {
+export async function syncUser(retries = 3) {
   try {
     const { userId } = await auth();
-
     const user = await currentUser();
 
-    if (!user) return null;
-    if (!userId) return await syncUser();
-
-    // Adiciona um pequeno atraso para garantir que o usuário esteja disponível no banco de dados
+    if (!user || !userId) {
+      if (retries > 0) {
+        await new Promise((res) => setTimeout(res, 500)); // Pequeno delay
+        return await syncUser(retries - 1);
+      }
+      console.error("Max retries reached in syncUser.");
+      return null;
+    }
 
     const existingUser = await prisma.user.findUnique({
-      where: {
-        clerkId: userId,
-      },
+      where: { clerkId: userId },
     });
 
     if (existingUser) {
-      revalidatePath("/");
       return existingUser;
     }
 
@@ -41,12 +41,10 @@ export async function syncUser() {
       },
     });
 
-    revalidatePath("/"); //proximoa opção: set timeout (não commitado)
-
     return dbUser;
   } catch (error) {
     console.error("Error in syncUser:", error);
-    return await Home();
+    return null;
   }
 }
 
@@ -72,19 +70,17 @@ export async function getUserByClerkId(clerkId: string) {
 export async function getDbUserId() {
   try {
     const { userId: clerkId } = await auth();
-
-    // Se não houver clerkId, retorne null
     if (!clerkId) return null;
 
-    // Busque o usuário no banco de dados
     const user = await getUserByClerkId(clerkId);
-
-    // Se o usuário não for encontrado, retorne null
-    if (!user) return null;
+    if (!user) {
+      console.warn("Usuário não encontrado no banco de dados.");
+      return null;
+    }
 
     return user.id;
   } catch (error) {
-    console.error("Error in getDbUserId:", error);
+    console.error("Erro ao buscar ID do usuário:", error);
     return null;
   }
 }
@@ -138,14 +134,12 @@ export async function getRandomUsers() {
 export async function toggleFollow(targetUserId: string) {
   try {
     const userId = await getDbUserId();
+    if (!userId) return { success: false, error: "Usuário não autenticado" };
 
-    // Se não houver userId, retorne
-    if (!userId) return;
+    if (userId === targetUserId) {
+      throw new Error("Você não pode seguir a si mesmo");
+    }
 
-    // Impede que o usuário siga a si mesmo
-    if (userId === targetUserId) throw new Error("You cannot follow yourself");
-
-    // Verifique se o usuário já segue o alvo
     const existingFollow = await prisma.follows.findUnique({
       where: {
         followerId_followingId: {
@@ -156,7 +150,6 @@ export async function toggleFollow(targetUserId: string) {
     });
 
     if (existingFollow) {
-      // Deixar de seguir
       await prisma.follows.delete({
         where: {
           followerId_followingId: {
@@ -166,30 +159,20 @@ export async function toggleFollow(targetUserId: string) {
         },
       });
     } else {
-      // Seguir
       await prisma.$transaction([
         prisma.follows.create({
-          data: {
-            followerId: userId,
-            followingId: targetUserId,
-          },
+          data: { followerId: userId, followingId: targetUserId },
         }),
         prisma.notification.create({
-          data: {
-            type: "FOLLOW",
-            userId: targetUserId, // Usuário sendo seguido
-            creatorId: userId, // Usuário que está seguindo
-          },
+          data: { type: "FOLLOW", userId: targetUserId, creatorId: userId },
         }),
       ]);
     }
 
-    // Revalide o cache da página inicial
     revalidatePath("/");
-
     return { success: true };
   } catch (error) {
-    console.error("Error in toggleFollow:", error);
-    return { success: false, error: "Error toggling follow" };
+    console.error("Erro ao alternar follow:", error);
+    return { success: false, error: "Erro ao alternar follow" };
   }
 }

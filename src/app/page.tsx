@@ -10,33 +10,39 @@ import { redirect } from "next/dist/server/api-utils";
 
 export default async function Home() {
   try {
-    const user = await currentUser();
-    const dbUserId = await getDbUserId();
-    const posts = await getPosts();
+    const userPromise = currentUser();
+    const dbUserIdPromise = getDbUserId();
+    const postsPromise = getPosts();
 
-    // Você pode exibir uma mensagem de erro ou redirecionar para uma página de erro
+    const [user, dbUserId, posts] = await Promise.all([
+      userPromise,
+      dbUserIdPromise,
+      postsPromise,
+    ]);
+
     return (
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
         <div className="lg:col-span-6">
-          {/* Exibe o CreatePost apenas se o usuário estiver logado */}
           {user && dbUserId ? <CreatePost /> : null}
-
           <div className="space-y-6">
-            {/* Exibe os posts independentemente de haver um usuário logado */}
             {posts.map((post) => (
               <PostCard key={post.id} post={post} dbUserId={dbUserId} />
             ))}
           </div>
         </div>
-
         <div className="hidden lg:block lg:col-span-4 sticky top-20">
-          {/* Exibe o WhoToFollow apenas se o usuário estiver logado */}
           {user && dbUserId ? <WhoToFollow /> : null}
         </div>
       </div>
     );
   } catch (error) {
-    revalidatePath("/");
-    return Home();
+    console.error("Error in Home Page:", error);
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-500">
+          Erro ao carregar a página. Tente novamente mais tarde.
+        </p>
+      </div>
+    );
   }
 }
