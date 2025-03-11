@@ -41,13 +41,12 @@ export async function syncUser() {
       },
     });
 
-    revalidatePath("/");
+    revalidatePath("/"); //proximoa opção: set timeout (não commitado)
 
     return dbUser;
   } catch (error) {
     console.error("Error in syncUser:", error);
-    Home();
-    return revalidatePath("/");
+    throw new Error("error in sync user");
   }
 }
 
