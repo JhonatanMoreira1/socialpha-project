@@ -49,7 +49,7 @@ export async function syncUser() {
     return dbUser;
   } catch (error) {
     console.error("Error in syncUser:", error);
-    Home();
+    return Home();
   }
 }
 
