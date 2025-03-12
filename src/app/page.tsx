@@ -1,4 +1,3 @@
-// app/page.tsx
 import { getPosts } from "@/actions/post.action";
 import { getDbUserId, syncUser } from "@/actions/user.action";
 import CreatePost from "@/components/CreatePost";
@@ -10,6 +9,9 @@ import { redirect } from "next/dist/server/api-utils";
 
 export default async function Home() {
   try {
+    // Sincroniza o usuário antes de carregar a página
+    await syncUser();
+
     const userPromise = currentUser();
     const dbUserIdPromise = getDbUserId();
     const postsPromise = getPosts();

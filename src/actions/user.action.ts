@@ -3,7 +3,6 @@
 import { PrismaClient } from "@prisma/client";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { withTimeout } from "../utils/asyncUtils";
 import { checkConnectivity } from "../utils/connectivityCheck";
 import Home from "@/app/page";
 
@@ -16,33 +15,46 @@ export async function syncUser(retries = 3) {
   try {
     await checkConnectivity();
 
-    const user = await withTimeout(auth.getUser(), 5000); // Timeout de 5 segundos
-    if (!user) {
-      throw new Error("Usuário não autenticado");
+    const { userId } = await auth();
+    const user = await currentUser();
+
+    if (!user || !userId) {
+      if (retries > 0) {
+        await new Promise((res) => setTimeout(res, 500)); // Pequeno delay
+        return await syncUser(retries - 1);
+      }
+      console.error("Max retries reached in syncUser.");
+      return null;
     }
 
-    const currentUser = await withTimeout(
-      prisma.user.findUnique({
-        where: { clerkId: user.id },
-      }),
-      5000
-    );
+    const existingUser = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
 
-    if (!currentUser) {
-      await withTimeout(
-        prisma.user.create({
-          data: {
-            clerkId: user.id,
-            email: user.email,
-            name: user.name,
-          },
-        }),
-        5000
-      );
+    if (existingUser) {
+      return existingUser;
     }
+
+    const dbUser = await prisma.user.create({
+      data: {
+        clerkId: userId,
+        name: `${user.firstName || ""} ${user.lastName || ""}`,
+        username:
+          user.username ?? user.emailAddresses[0].emailAddress.split("@")[0],
+        email: user.emailAddresses[0].emailAddress,
+        image: user.imageUrl,
+      },
+    });
+
+    return dbUser;
   } catch (error) {
-    console.error("Erro ao sincronizar usuário:", error);
-    throw new Error("Erro interno do servidor ao sincronizar usuário");
+    console.error("Error in syncUser:", error);
+    if (retries > 0) {
+      console.log(`Tentando novamente... (${retries} tentativas restantes)`);
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Espera 1 segundo antes de tentar novamente
+      return syncUser(retries - 1);
+    }
+    return null;
   }
 }
 

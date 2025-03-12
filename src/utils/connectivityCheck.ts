@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { auth } from "clerk-sdk-node";
+import { auth } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
 export async function checkConnectivity() {
   try {
-    await auth.getUser();
+    await auth();
     await prisma.$connect();
   } catch (error) {
     console.error("Erro de conectividade:", error);
